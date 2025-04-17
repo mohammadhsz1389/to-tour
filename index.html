@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بگردش - قدم‌شماری هوشمند</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #ff6b6b;
+            --text-color: #333;
+            --bg-color: #f5f7ff;
+            --card-color: #fff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #F44336;
+        }
+
+        .dark-mode {
+            --primary-color: #5d7eff;
+            --secondary-color: #ff7b7b;
+            --text-color: #f0f0f0;
+            --bg-color: #1a1a2e;
+            --card-color: #16213e;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .stats-card {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .steps-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background-color: var(--card-color);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 5px 0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .coins-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 15px 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .coins-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .coins-icon {
+            font-size: 24px;
+            color: gold;
+            margin-left: 10px;
+        }
+
+        .coins-count {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .convert-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .convert-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .convert-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .league-section {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .league-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .league-progress {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .league-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .league-levels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .level {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .level-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--card-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            box-shadow: var(--shadow);
+            font-size: 18px;
+        }
+
+        .level.active .level-icon {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .level-name {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .level.active .level-name {
+            color: var(--primary-color);
+        }
+
+        .level::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: -1;
+        }
+
+        .level:last-child::after {
+            display: none;
+        }
+
+        .challenge-section {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 25px;
+        }
+
+        .challenge-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .challenge-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .challenge-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .challenge-desc {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .start-challenge {
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-challenge:hover {
+            transform: translateY(-2px);
+        }
+
+        .sensor-status {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .sensor-active {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .sensor-inactive {
+            color: #F44336;
+            font-weight: bold;
+        }
+
+        .start-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .start-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .start-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 14px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        /* بخش جدید: تردید (ترید) */
+        .trade-section {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 25px;
+        }
+
+        .trade-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .trade-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .trade-amount {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .trade-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            margin-left: 10px;
+        }
+
+        .trade-slider {
+            width: 100%;
+            height: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            outline: none;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .trade-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .trade-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .trade-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .trade-up {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .trade-down {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .trade-result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .trade-profit {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .trade-loss {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+
+        /* بخش جدید: سکه روزانه */
+        .daily-coins-section {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .daily-coins-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .daily-coins-desc {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .daily-coins-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .daily-coins-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .daily-coins-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* بخش جدید: فعالیت‌های روزانه */
+        .daily-tasks-section {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 25px;
+        }
+
+        .daily-tasks-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: rgba(74, 107, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .task-progress {
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .task-reward {
+            display: flex;
+            align-items: center;
+            color: gold;
+            font-weight: bold;
+        }
+
+        .task-reward i {
+            margin-left: 5px;
+        }
+
+        .task-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .task-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* بخش جدید: رتبه‌بندی کاربران */
+        .leaderboard-section {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 25px;
+        }
+
+        .leaderboard-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .leaderboard-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .user-rank {
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .user-rank.top {
+            background-color: gold;
+            color: #333;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-coins {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .user-coins i {
+            margin-left: 5px;
+            color: gold;
+        }
+
+        .online-status {
+            width: 10px;
+            height: 10px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .offline-status {
+            width: 10px;
+            height: 10px;
+            background-color: #cccccc;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>بگردش</h1>
+            <button class="mode-toggle" id="modeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <div class="stats-card">
+            <div class="steps-display" id="stepsCount">0</div>
+            <div>قدم</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="caloriesCount">0</div>
+                    <div class="stat-label">کالری</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="distanceCount">0</div>
+                    <div class="stat-label">کیلومتر</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="coinsCount">0</div>
+                    <div class="stat-label">سکه</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="coins-section">
+            <div class="coins-info">
+                <span class="coins-count" id="totalCoins">0</span>
+                <i class="fas fa-coins coins-icon"></i>
+            </div>
+            <button class="convert-btn" id="convertBtn" disabled>تبدیل قدم به سکه</button>
+        </div>
+
+        <!-- بخش جدید: سکه روزانه -->
+        <div class="daily-coins-section">
+            <div class="daily-coins-title">سکه روزانه</div>
+            <div class="daily-coins-desc">هر روز 120 سکه رایگان دریافت کنید!</div>
+            <button class="daily-coins-btn" id="dailyCoinsBtn">دریافت سکه روزانه</button>
+        </div>
+
+        <!-- بخش جدید: فعالیت‌های روزانه -->
+        <div class="daily-tasks-section">
+            <div class="daily-tasks-title">فعالیت‌های روزانه</div>
+            <div id="tasksList">
+                <!-- وظایف روزانه در اینجا نمایش داده می‌شوند -->
+            </div>
+        </div>
+
+        <!-- بخش جدید: تردید (ترید) -->
+        <div class="trade-section">
+            <div class="trade-title">
+                <span>تردید (ترید سکه)</span>
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="trade-container">
+                <div class="trade-amount">
+                    <span>مقدار سکه:</span>
+                    <input type="number" class="trade-input" id="tradeAmount" min="10" value="10">
+                </div>
+                <input type="range" min="10" max="1000" value="10" class="trade-slider" id="tradeSlider">
+                <div class="trade-buttons">
+                    <button class="trade-btn trade-up" id="tradeUp">▲ افزایش</button>
+                    <button class="trade-btn trade-down" id="tradeDown">▼ کاهش</button>
+                </div>
+                <div class="trade-result" id="tradeResult"></div>
+            </div>
+        </div>
+
+        <div class="league-section">
+            <div class="league-title">لیگ شما</div>
+            <div class="league-progress">
+                <div class="league-progress-bar" id="leagueProgress" style="width: 0%"></div>
+            </div>
+            <div class="league-levels">
+                <div class="level" id="level1">
+                    <div class="level-icon">N</div>
+                    <div class="level-name">NOB</div>
+                </div>
+                <div class="level" id="level2">
+                    <div class="level-icon">P</div>
+                    <div class="level-name">PRO</div>
+                </div>
+                <div class="level" id="level3">
+                    <div class="level-icon">M</div>
+                    <div class="level-name">Master</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش جدید: رتبه‌بندی کاربران -->
+        <div class="leaderboard-section">
+            <div class="leaderboard-title">رتبه‌بندی کاربران</div>
+            <div class="leaderboard-list" id="leaderboardList">
+                <!-- لیست کاربران در اینجا نمایش داده می‌شود -->
+            </div>
+        </div>
+
+        <div class="sensor-status" id="sensorStatus">
+            وضعیت سنسور: <span class="sensor-inactive">غیرفعال</span>
+        </div>
+
+        <button class="start-btn" id="startBtn">شروع قدم‌شماری</button>
+    </div>
+
+    <div class="footer">
+        ساخته شده با ❤️ توسط محمد حسین
+    </div>
+
+    <script>
+        // Dark mode toggle
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+        
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                modeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                modeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            modeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        // App logic
+        let steps = parseInt(localStorage.getItem('steps')) || 0;
+        let coins = parseInt(localStorage.getItem('coins')) || 0;
+        let totalCoins = parseInt(localStorage.getItem('totalCoins')) || 0;
+        let isTracking = false;
+        let accelerometer = null;
+        let lastAcceleration = 0;
+        let stepThreshold = 15; // حساسیت تشخیص قدم
+        let stepCooldown = 0;
+        
+        // متغیرهای جدید برای بخش‌های اضافه شده
+        let lastDailyCoinsDate = localStorage.getItem('lastDailyCoinsDate');
+        let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || {};
+        let username = localStorage.getItem('username') || `کاربر_${Math.floor(Math.random() * 10000)}`;
+        
+        const stepsCount = document.getElementById('stepsCount');
+        const caloriesCount = document.getElementById('caloriesCount');
+        const distanceCount = document.getElementById('distanceCount');
+        const coinsCount = document.getElementById('coinsCount');
+        const totalCoinsDisplay = document.getElementById('totalCoins');
+        const progressBar = document.getElementById('progressBar');
+        const leagueProgress = document.getElementById('leagueProgress');
+        const convertBtn = document.getElementById('convertBtn');
+        const sensorStatus = document.getElementById('sensorStatus');
+        const startBtn = document.getElementById('startBtn');
+        const dailyCoinsBtn = document.getElementById('dailyCoinsBtn');
+        const tasksList = document.getElementById('tasksList');
+        const tradeAmount = document.getElementById('tradeAmount');
+        const tradeSlider = document.getElementById('tradeSlider');
+        const tradeUp = document.getElementById('tradeUp');
+        const tradeDown = document.getElementById('tradeDown');
+        const tradeResult = document.getElementById('tradeResult');
+        const leaderboardList = document.getElementById('leaderboardList');
+        
+        // Convert steps to coins button
+        convertBtn.addEventListener('click', convertStepsToCoins);
+        
+        // Start/stop tracking button
+        startBtn.addEventListener('click', toggleTracking);
+        
+        // Daily coins button
+        dailyCoinsBtn.addEventListener('click', claimDailyCoins);
+        
+        // Trade buttons
+        tradeUp.addEventListener('click', () => performTrade('up'));
+        tradeDown.addEventListener('click', () => performTrade('down'));
+        
+        // Trade slider and input synchronization
+        tradeSlider.addEventListener('input', () => {
+            tradeAmount.value = tradeSlider.value;
+        });
+        
+        tradeAmount.addEventListener('input', () => {
+            if (parseInt(tradeAmount.value) > 1000) tradeAmount.value = 1000;
+            if (parseInt(tradeAmount.value) < 10) tradeAmount.value = 10;
+            tradeSlider.value = tradeAmount.value;
+        });
+
+        // Initialize the app
+        function initApp() {
+            updateDisplay();
+            checkDailyCoins();
+            loadDailyTasks();
+            simulateOnlineUsers();
+            
+            // Enable convert button if there are steps to convert
+            if (steps > 0) {
+                convertBtn.disabled = false;
+            }
+        }
+
+        function toggleTracking() {
+            if (isTracking) {
+                stopTracking();
+                startBtn.textContent = 'شروع قدم‌شماری';
+                sensorStatus.innerHTML = 'وضعیت سنسور: <span class="sensor-inactive">غیرفعال</span>';
+            } else {
+                startTracking();
+                startBtn.textContent = 'توقف قدم‌شماری';
+                sensorStatus.innerHTML = 'وضعیت سنسور: <span class="sensor-active">فعال</span>';
+            }
+        }
+        
+        function startTracking() {
+            if (window.Accelerometer) {
+                try {
+                    accelerometer = new Accelerometer({ frequency: 60 });
+                    
+                    accelerometer.addEventListener('reading', () => {
+                        // محاسبه شتاب کلی
+                        const acceleration = Math.sqrt(
+                            accelerometer.x ** 2 + 
+                            accelerometer.y ** 2 + 
+                            accelerometer.z ** 2
+                        );
+                        
+                        // تشخیص قدم
+                        detectStep(acceleration);
+                    });
+                    
+                    accelerometer.start();
+                    isTracking = true;
+                } catch (error) {
+                    alert('خطا در دسترسی به سنسور: ' + error.message);
+                    sensorStatus.innerHTML = 'وضعیت سنسور: <span class="sensor-inactive">خطا در دسترسی</span>';
+                }
+            } else {
+                alert('مرورگر شما از سنسور شتاب‌سنج پشتیبانی نمی‌کند. لطفاً از مرورگر دیگری استفاده کنید.');
+                sensorStatus.innerHTML = 'وضعیت سنسور: <span class="sensor-inactive">پشتیبانی نمی‌شود</span>';
+            }
+        }
+        
+        function stopTracking() {
+            if (accelerometer) {
+                accelerometer.stop();
+            }
+            isTracking = false;
+            // ذخیره داده‌ها هنگام توقف ردیابی
+            saveData();
+            checkTasksProgress();
+        }
+        
+        function detectStep(currentAcceleration) {
+            // کاهش زمان کوئلدون
+            if (stepCooldown > 0) {
+                stepCooldown--;
+                return;
+            }
+            
+            // محاسبه تغییرات شتاب
+            const delta = Math.abs(currentAcceleration - lastAcceleration);
+            
+            // اگر تغییرات از حد آستانه بیشتر بود، قدم محسوب می‌شود
+            if (delta > stepThreshold) {
+                addStep();
+                stepCooldown = 20; // زمان تأخیر بین تشخیص قدم‌ها
+            }
+            
+            lastAcceleration = currentAcceleration;
+        }
+        
+        function addStep() {
+            steps++;
+            coins++; // Each step = 1 coin
+            updateDisplay();
+            
+            // ذخیره موقت داده‌ها
+            localStorage.setItem('steps', steps);
+            localStorage.setItem('coins', coins);
+            
+            // Enable convert button if there are steps to convert
+            if (steps > 0) {
+                convertBtn.disabled = false;
+            }
+            
+            // بررسی پیشرفت وظایف
+            checkTasksProgress();
+        }
+        
+        function convertStepsToCoins() {
+            totalCoins += coins;
+            steps = 0;
+            coins = 0;
+            updateDisplay();
+            convertBtn.disabled = true;
+            
+            // ذخیره داده‌ها پس از تبدیل
+            saveData();
+            
+            // Show a message that coins have been added
+            alert(`سکه های شما با موفقیت اضافه شدند! مجموع سکه ها: ${totalCoins}`);
+        }
+        
+        function updateDisplay() {
+            // Update step count
+            stepsCount.textContent = steps.toLocaleString();
+            
+            // Calculate calories (approx 0.04 calories per step)
+            const calories = Math.round(steps * 0.04);
+            caloriesCount.textContent = calories.toLocaleString();
+            
+            // Calculate distance (approx 0.000762 km per step)
+            const distance = (steps * 0.000762).toFixed(2);
+            distanceCount.textContent = distance;
+            
+            // Update coins
+            coinsCount.textContent = coins.toLocaleString();
+            totalCoinsDisplay.textContent = totalCoins.toLocaleString();
+            
+            // Update progress bar (max 5000 steps for demo)
+            const progressPercent = Math.min((steps / 5000) * 100, 100);
+            progressBar.style.width = `${progressPercent}%`;
+            
+            // Update league progress and levels
+            updateLeagueProgress();
+        }
+        
+        function updateLeagueProgress() {
+            // Determine current league
+            let leaguePercent = 0;
+            let currentLevel = 1;
+            
+            if (steps < 10000) {
+                leaguePercent = (steps / 10000) * 100;
+                currentLevel = 1;
+            } else if (steps < 20000) {
+                leaguePercent = ((steps - 10000) / 10000) * 100;
+                currentLevel = 2;
+            } else {
+                leaguePercent = ((steps - 20000) / 30000) * 100;
+                currentLevel = 3;
+            }
+            
+            leagueProgress.style.width = `${leaguePercent}%`;
+            
+            // Update active levels
+            document.getElementById('level1').classList.toggle('active', currentLevel >= 1);
+            document.getElementById('level2').classList.toggle('active', currentLevel >= 2);
+            document.getElementById('level3').classList.toggle('active', currentLevel >= 3);
+        }
+        
+        function saveData() {
+            localStorage.setItem('steps', steps);
+            localStorage.setItem('coins', coins);
+            localStorage.setItem('totalCoins', totalCoins);
+            localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+            localStorage.setItem('lastDailyCoinsDate', lastDailyCoinsDate);
+            localStorage.setItem('username', username);
+        }
+        
+        // بخش جدید: سکه روزانه
+        function checkDailyCoins() {
+            const today = new Date().toDateString();
+            
+            if (lastDailyCoinsDate === today) {
+                dailyCoinsBtn.disabled = true;
+                dailyCoinsBtn.textContent = 'امروز دریافت کردید';
+            } else {
+                dailyCoinsBtn.disabled = false;
+                dailyCoinsBtn.textContent = 'دریافت سکه روزانه';
+            }
+        }
+        
+        function claimDailyCoins() {
+            const today = new Date().toDateString();
+            
+            if (lastDailyCoinsDate !== today) {
+                totalCoins += 120;
+                lastDailyCoinsDate = today;
+                saveData();
+                updateDisplay();
+                
+                dailyCoinsBtn.disabled = true;
+                dailyCoinsBtn.textContent = 'امروز دریافت کردید';
+                
+                alert('120 سکه روزانه با موفقیت به حساب شما اضافه شد!');
+            }
+        }
+        
+        // بخش جدید: فعالیت‌های روزانه
+        function loadDailyTasks() {
+            const today = new Date().toDateString();
+            const tasks = [
+                { id: 'task1', name: '100 قدم راه بروید', goal: 100, reward: 50 },
+                { id: 'task2', name: '500 قدم راه بروید', goal: 500, reward: 100 },
+                { id: 'task3', name: '1000 قدم راه بروید', goal: 1000, reward: 200 }
+            ];
+            
+            // اگر تاریخ تغییر کرده، وظایف را ریست کنیم
+            if (completedTasks.date !== today) {
+                completedTasks = { date: today };
+                saveData();
+            }
+            
+            tasksList.innerHTML = '';
+            
+            tasks.forEach(task => {
+                const isCompleted = completedTasks[task.id] === true;
+                const progress = Math.min(steps, task.goal);
+                
+                const taskElement = document.createElement('div');
+                taskElement.className = 'task-item';
+                taskElement.innerHTML = `
+                    <div class="task-info">
+                        <div class="task-name">${task.name}</div>
+                        <div class="task-progress">${progress}/${task.goal} قدم</div>
+                    </div>
+                    <div class="task-reward">
+                        ${task.reward} <i class="fas fa-coins"></i>
+                    </div>
+                    <button class="task-btn" id="task-${task.id}" ${isCompleted || progress < task.goal ? 'disabled' : ''}>
+                        ${isCompleted ? 'تکمیل شد' : 'دریافت جایزه'}
+                    </button>
+                `;
+                
+                tasksList.appendChild(taskElement);
+                
+                // اضافه کردن ایونت لیسنر برای دکمه وظیفه
+                if (!isCompleted && progress >= task.goal) {
+                    document.getElementById(`task-${task.id}`).addEventListener('click', () => completeTask(task));
+                }
+            });
+        }
+        
+        function completeTask(task) {
+            totalCoins += task.reward;
+            completedTasks[task.id] = true;
+            saveData();
+            updateDisplay();
+            loadDailyTasks();
+            
+            alert(`تبریک! شما ${task.reward} سکه برای تکمیل "${task.name}" دریافت کردید.`);
+        }
+        
+        function checkTasksProgress() {
+            const taskButtons = document.querySelectorAll('.task-btn');
+            
+            taskButtons.forEach(button => {
+                const taskId = button.id.replace('task-', '');
+                const taskGoal = parseInt(button.parentElement.querySelector('.task-progress').textContent.split('/')[1]);
+                
+                if (steps >= taskGoal && !completedTasks[taskId]) {
+                    button.disabled = false;
+                    button.textContent = 'دریافت جایزه';
+                }
+            });
+        }
+        
+        // بخش جدید: تردید (ترید)
+        function performTrade(direction) {
+            const amount = parseInt(tradeAmount.value);
+            
+            if (isNaN(amount) || amount < 10) {
+                alert('حداقل مقدار برای ترید 10 سکه است');
+                return;
+            }
+            
+            if (amount > totalCoins) {
+                alert('سکه کافی ندارید!');
+                return;
+            }
+            
+            // شبیه‌سازی نتیجه ترید (70% شانس برد)
+            const isWin = Math.random() < 0.7;
+            const multiplier = 1 + Math.random() * 0.5; // سود بین 100% تا 150%
+            const profit = isWin ? Math.floor(amount * multiplier) : -amount;
+            
+            totalCoins += profit;
+            saveData();
+            updateDisplay();
+            
+            // نمایش نتیجه
+            tradeResult.style.display = 'block';
+            tradeResult.className = 'trade-result ' + (isWin ? 'trade-profit' : 'trade-loss');
+            tradeResult.innerHTML = isWin 
+                ? `تبریک! شما ${profit} سکه سود کردید! (${Math.floor(multiplier * 100)}%)`
+                : `متأسفیم! شما ${amount} سکه از دست دادید!`;
+            
+            // مخفی کردن نتیجه بعد از 3 ثانیه
+            setTimeout(() => {
+                tradeResult.style.display = 'none';
+            }, 3000);
+        }
+        
+        // بخش جدید: رتبه‌بندی کاربران (شبیه‌سازی شده)
+        function simulateOnlineUsers() {
+            // کاربران شبیه‌سازی شده
+            const users = [
+                { name: 'علی', coins: 1250, online: true },
+                { name: 'محمد', coins: 980, online: false },
+                { name: 'زهرا', coins: 750, online: true },
+                { name: 'فاطمه', coins: 620, online: false },
+                { name: 'امیر', coins: 580, online: true },
+                { name: 'رضا', coins: 450, online: false },
+                { name: 'نازنین', coins: 380, online: true },
+                { name: 'سارا', coins: 320, online: false },
+                { name: 'حسین', coins: 290, online: true },
+                { name: 'مینا', coins: 210, online: false }
+            ];
+            
+            // اضافه کردن کاربر فعلی به لیست
+            users.push({ 
+                name: username, 
+                coins: totalCoins, 
+                online: true,
+                isCurrentUser: true
+            });
+            
+            // مرتب‌سازی بر اساس سکه‌ها
+            users.sort((a, b) => b.coins - a.coins);
+            
+            // نمایش لیست کاربران
+            leaderboardList.innerHTML = '';
+            
+            users.forEach((user, index) => {
+                const userElement = document.createElement('div');
+                userElement.className = `user-item ${user.isCurrentUser ? 'current-user' : ''}`;
+                userElement.innerHTML = `
+                    <div class="user-rank ${index < 3 ? 'top' : ''}">${index + 1}</div>
+                    <div class="user-info">
+                        <div class="user-name">${user.name} ${user.isCurrentUser ? '(شما)' : ''}</div>
+                        <div class="user-coins">
+                            <span class="${user.online ? 'online-status' : 'offline-status'}"></span>
+                            ${user.coins.toLocaleString()} <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                `;
+                
+                leaderboardList.appendChild(userElement);
+            });
+        }
+        
+        // Initialize the app
+        initApp();
+        
+        // ذخیره داده‌ها هنگام بسته شدن صفحه
+        window.addEventListener('beforeunload', saveData);
+    </script>
+</body>
+</html>
